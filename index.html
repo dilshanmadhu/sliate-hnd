@@ -115,7 +115,7 @@
 					return html;
 				}
 
-				document.getElementById("ans").innerHTML = generateTable(table1, "1st Attempt") + "<br>" + "<p>From 2nd attempt onwards, the maximum grade is limit to C" +generateTable(table2, "Other Attempts")+"<br>"+ notice();
+				document.getElementById("ans").innerHTML = generateTable(table1, "1st Attempt") + "<br>" + "From 2nd attempt onwards, the maximum grade is limit to C<br><br>" +generateTable(table2, "Other Attempts")+"<br>"+ notice();
 			}
 
 			
@@ -131,17 +131,17 @@
 	<body style="margin-left:20px;">
 	
 		<h2>Required Exam Mark Calculator</h2>
-		<p>This shows required marks for the examination (approximately) to obtain a certain grade, based on assignment marks.</p>
-
-		<p>Results are decided according to following table</p>
+		This shows required marks for the examination (approximately) to obtain a certain grade, based on assignment marks.
+		<br /> <br />
+		Results are decided according to following table <br /><br />
 		<table cellpadding="5" border="1"> 
 		<tr><th>Assignment</th><th>Exam</th><th>Result</th></tr>
 		<tr class="pink"><td>Yes</td><td>Marks&lt;40</td><th>I(SE)</th></tr>
 		<tr class="pink"><td>No</td><td>Marks&gt;=40</td><th>I(CA)</th></tr>
 		<tr class="pink"><td>No</td><td>Marks&lt;40</td><th>INC</th></tr>
 		<tr class="green"><td>Yes</td><td>Marks&gt;=40</td><th>Grade</th></tr>
-		</table>
-		<p>With assignment marks, grade which can obtain for exam marks from 40 as follows.</p>
+		</table> <br />
+		With assignment marks, grade which can obtain for exam marks from 40 as follows.
 		
 		<h4>Enter Assignment Marks</h4>
 		<form name="frm">
@@ -161,7 +161,7 @@
 			</table>
 			
 			<i>
-			<p>Refer detailed syllabus for assignment weight. <br /> Some examples,</p>
+			Refer detailed syllabus for assignment weight. <br /> Some examples,
 			<ul>
 				<li> HNDA (New) - 40%
 				<li> HND in English (New) - 40%
