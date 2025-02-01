@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Projected Result</title>
+		<style type="text/css">
+			input {font-size:19px;}
+			body {font-size:19px;}
+			td{text-align:center;}
+			tr.pink{background-color:#FE7B85;}
+			tr.yellow{background-color:#F9FE5D;}
+			tr.green{background-color:#56FE81;}
+			#ans {
+				margin-left:30px; font-size:20px; width:fit-content;
+				padding:0px;
+			}
+		</style>
+		
+		<script type="text/javascript">
+		
+			function cal() {
+				let valid = true;
+				const asm = document.getElementById("am").value;
+				const er_am = document.getElementById("er_am");
+				if(!(asm.trim())){
+						valid=false;
+						er_am.textContent = "Enter Reg. No.";	
+					} else {
+						er_am.textContent = "";
+				}
+				
+				if(!valid){
+						preventDefault();
+				}
+				
+				var am = Number(document.frm.am.value);
+				var aw = Number(document.frm.w.value);
+				var emMin = 40, emMax = 100;
+
+				var fmCategories = [
+					{ range: [0, 24], label: "E" },
+					{ range: [25, 29], label: "D" },
+					{ range: [30, 34], label: "D+" },
+					{ range: [35, 39], label: "C-" },
+					{ range: [40, 44], label: "C" },
+					{ range: [45, 49], label: "C+" },
+					{ range: [50, 54], label: "B-" },
+					{ range: [55, 59], label: "B" },
+					{ range: [60, 64], label: "B+" },
+					{ range: [65, 69], label: "A-" },
+					{ range: [70, 84], label: "A" },
+					{ range: [85, 100], label: "A+" }
+				];
+
+				function getCategory(fm) {
+					for (let category of fmCategories) {
+						if (fm >= category.range[0] && fm <= category.range[1]) {
+							return category.label;
+						}
+					}
+					return "Unknown";
+				}
+
+				var table1 = {};
+				var table2 = {};
+
+				for (var em = emMin; em <= emMax; em++) {
+					var fm = Math.round(am * aw + em * (1 - aw)); // Calculate fm and round to nearest integer
+					var category = getCategory(fm);
+
+					// Populate Table 1 (A1)
+					if (!table1[category]) {
+						table1[category] = [em, em]; // Start range
+					} else {
+						table1[category][1] = em; // Update range end
+					}
+
+					// Populate Table 2 (A2)
+					var category2 = fm < 40 ? category : "C"; // All fm >= 40 are "C"
+					if (!table2[category2]) {
+						table2[category2] = [em, em];
+					} else {
+						table2[category2][1] = em;
+					}
+				}
+
+				function generateTable(tableData, caption) {
+					var html = `<table bgcolor='#D0CFCE' border='1'><caption>${caption}</caption><tr><th>Exam Marks</th><th>Grade</th></tr>`;
+					
+					for (var cat in tableData) {
+						// Determine the row color based on category
+						var rowClass = "";
+						if (cat === "E") {
+							rowClass = "pink";
+						} else if (cat === "D" || cat === "D+" || cat === "C-") {
+							rowClass = "yellow";
+						} else {
+							rowClass = "green";
+						}
+						
+						html += `<tr class="${rowClass}"><td>${tableData[cat][0]} - ${tableData[cat][1]}</td><td>${cat}</td></tr>`;
+					}
+					
+					html += "</table>";
+					return html;
+				}
+				
+				function notice(){
+					var html = "<table cellpadding='2' border='1'><tr class='green'><td>C or Better </td><td>Pass</td></tr><tr class='yellow'><td>C-, D+, D</td><td>Only one is allowed per semester</td></tr><tr class='pink'><td>Other</td><td>Fail</td></tr></table>";
+					
+					return html;
+				}
+
+				document.getElementById("ans").innerHTML = generateTable(table1, "1st Attempt") + "<br>" + "<p>From 2nd attempt onwards, the maximum grade is limit to C" +generateTable(table2, "Other Attempts")+"<br>"+ notice();
+			}
+
+			
+			function clr(){
+				document.getElementById("am").value="";
+				document.getElementById("ans").innerHTML = "";
+				const radioButtons = document.querySelectorAll('input[name="w"]');
+				radioButtons[1].checked = true;
+			}
+		</script>
+	</head>
+
+	<body style="margin-left:20px;">
+	
+		<h2>Required Exam Mark Calculator</h2>
+		<p>This shows required marks for the examination (approximately) to obtain a certain grade, based on assignment marks.</p>
+
+		<p>Results are decided according to following table</p>
+		<table cellpadding="5" border="1"> 
+		<tr><th>Assignment</th><th>Exam</th><th>Result</th></tr>
+		<tr class="pink"><td>Yes</td><td>Marks&lt;40</td><th>I(SE)</th></tr>
+		<tr class="pink"><td>No</td><td>Marks&gt;=40</td><th>I(CA)</th></tr>
+		<tr class="pink"><td>No</td><td>Marks&lt;40</td><th>INC</th></tr>
+		<tr class="green"><td>Yes</td><td>Marks&gt;=40</td><th>Grade</th></tr>
+		</table>
+		<p>With assignment marks, grade which can obtain for exam marks from 40 as follows.</p>
+		
+		<h4>Enter Assignment Marks</h4>
+		<form name="frm">
+			<table>
+			<tr>
+			<td style="text-align:left;">Marks &nbsp;</td>
+			<td style="text-align:left;"><input type="number" name="am" id="am" min="1" max="100" step="1" required="required" /><span id="er_am" style="color:red;"></span></td>
+			</tr>
+			<tr>
+			<td style="text-align:left;">Weight &nbsp;</td>
+			<td style="text-align:left;">
+			<input type="radio" name="w" value="0.3" /> 30%
+			<input type="radio" name="w" value="0.4" checked="checked" /> 40%
+			<input type="radio" name="w" value="0.5" /> 50%
+			</td>
+			</tr>
+			</table>
+			
+			<i>
+			<p>Refer detailed syllabus for assignment weight. <br /> Some examples,</p>
+			<ul>
+				<li> HNDA (New) - 40%
+				<li> HND in English (New) - 40%
+				<li> HNDIT (New) - 40%
+				<li> HNDA (Old) - 30%
+			</ul>
+			</i>
+			<br />
+			<input type="button" value="Calculate" onclick="cal()" />
+			<input type="button" value="Clear" onclick="clr()" />			
+		</form>
+		<br /><br />
+		<div id="ans"></div>
+				
+	</body>
+</html>
